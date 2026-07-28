@@ -19,6 +19,9 @@ tracker current *as you work*, not reconstruct it afterwards.
 3. Find the task(s) covering the work at hand (`search_tasks` to jump,
    `list_tasks` to browse), or create one. Move it to an in-progress stage when
    you actually start.
+4. If the Knowledge base module is on, read the relevant runbook articles
+   (`list_kb`, `get_article`) before working in an unfamiliar area — that is
+   what they exist for.
 
 ## Bootstrap (first run only)
 
@@ -152,6 +155,25 @@ Doc Hub:
    version. If it's refused because someone is editing the doc live in the
    app, retry shortly; never work around the refusal.
 
+## Knowledge base (when enabled on the project)
+
+The KB is the project's runbook — conventions, setup steps, gotchas, written
+by the people who know them. If the tools error with "module is not enabled",
+ask the project owner rather than working around it.
+
+- `list_kb` is the table of contents (groups and articles, with `status` and
+  a derived `stale` flag); `search_kb` searches titles; `get_article` returns
+  one article's markdown and editorial state.
+- Authoring: `create_article` (markdown only — no file uploads; `nodeKind:
+  'group'` makes a contents heading; depth caps at group → article →
+  sub-article) and `update_article` (also moves nodes via `parentId` /
+  `position`, and sets a review cadence via `reviewEveryDays`).
+- **Agent-created articles are drafts.** There is deliberately no publish or
+  mark-reviewed tool: asserting that content is correct *today* is a person's
+  call. Write the draft, then point the project owner at it.
+- A `stale` node's review cadence has lapsed — treat its content with
+  suspicion and flag it; don't silently trust or rewrite it.
+
 ## What the MCP cannot do (ask the project owner instead)
 
 | Need | Why |
@@ -160,6 +182,7 @@ Doc Hub:
 | Create Doc Hub folders | No tool; `folderId` must already exist |
 | Delete lists, stages, or tags | Not exposed over MCP (archive/rename only) |
 | Edit or delete others' comments | Own comments only |
+| Publish or mark-reviewed a KB article | Deliberate: asserting content is correct today is a person's call |
 
 Prefer moving a task to a `discarded`-category stage over `delete_task` —
 deletion is permanent and reserved for true mistakes (duplicates, test noise).
@@ -186,3 +209,11 @@ deletion is permanent and reserved for true mistakes (duplicates, test noise).
 | `get_pr_status` / `get_ci_status` | Live PR state / CI checks rollup (GitHub module, connected repos) |
 | `list_recent_commits` | Newest commits of a connected repo |
 | `get_linked_prs` | PRs mentioned on a task (`@[pr:…]` chips), resolved live |
+| `list_kb` / `search_kb` / `get_article` | KB reads: contents tree / title search / one article (module-gated) |
+| `create_article` / `update_article` | KB authoring — markdown drafts; update also moves nodes, sets review cadence |
+| `get_roadmap` | Milestone tree with ids — roadmap tools address by **id** (module-gated) |
+| `create_milestone` / `update_milestone` | Roadmap milestones; sub-milestones one level max |
+| `create_roadmap_item` / `update_roadmap_item` | Roadmap items; keep statuses current as work moves |
+| `delete_milestone` / `delete_roadmap_item` | `full` capability + `confirm: true`; milestone delete cascades |
+| `update_comment` / `delete_comment` | Own comments only; delete is permanent (`full` capability) |
+| `delete_task` | Permanent, `full` capability — prefer a discarded-category stage; true mistakes only |

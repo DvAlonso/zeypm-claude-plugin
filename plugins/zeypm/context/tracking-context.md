@@ -14,6 +14,8 @@ project). The tracker is part of the work, not an afterthought.
 - **Findings never evaporate.** Non-blocking discoveries (bugs, polish items,
   tech debt, deferrals) are filed to the `Polish / Deferred` list, tagged with
   their milestone, the moment they're found.
+- **Read the Knowledge base first** (when the module is on) — the project's
+  runbook articles beat rediscovering conventions mid-work.
 - **Write for humans.** Descriptions and comments are markdown with bullet /
   numbered lists, plain language, no code jargon in the narrative. File
   references only when they genuinely help — and then at the end of the
