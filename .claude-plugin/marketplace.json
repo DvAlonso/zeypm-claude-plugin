@@ -1,0 +1,14 @@
+{
+  "name": "zeypm",
+  "description": "Agent tooling for projects tracked in zeypm — the tracking skill, reminder hook, and session conventions, always current.",
+  "owner": { "name": "David Alonso", "url": "https://github.com/DvAlonso" },
+  "plugins": [
+    {
+      "name": "zeypm",
+      "source": "./plugins/zeypm",
+      "description": "Keeps a zeypm-tracked project current: the zeypm-tracking skill, a non-blocking Stop reminder hook, and session-start tracking context.",
+      "category": "productivity",
+      "keywords": ["zeypm", "tracker", "project-management", "mcp"]
+    }
+  ]
+}

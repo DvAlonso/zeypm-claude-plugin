@@ -1,0 +1,10 @@
+{
+  "name": "zeypm",
+  "displayName": "zeypm tracking",
+  "version": "0.1.0",
+  "description": "Conventions and automation for keeping a zeypm-tracked project current: the zeypm-tracking skill, a non-blocking Stop reminder, and session-start tracking context. Pair it with your project's zeypm MCP connection.",
+  "author": { "name": "David Alonso", "url": "https://github.com/DvAlonso" },
+  "homepage": "https://github.com/DvAlonso/zeypm-claude-plugin",
+  "repository": "https://github.com/DvAlonso/zeypm-claude-plugin",
+  "keywords": ["zeypm", "tracker", "project-management", "mcp"]
+}
