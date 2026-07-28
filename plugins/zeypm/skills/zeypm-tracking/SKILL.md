@@ -26,13 +26,13 @@ Goal: mirror the project's milestone breakdown into the tracker.
 
 1. Read the development plan / milestone breakdown in `docs/`. If only the
    functional spec exists and there is no milestone breakdown yet, **stop and
-   ask David** — never invent milestones.
+   ask the project owner** — never invent milestones.
 2. Create one list per milestone via `create_list`, named `M1 - <short name>`,
    `M2 - <short name>`, … Let them inherit the project pipeline; don't invent
    custom stages.
 3. Create a `Polish / Deferred` list, and one milestone tag per milestone
    (`M1`, `M2`, …) via `create_tag` — it's idempotent, so re-running bootstrap
-   is safe. Don't pass colors unless David asked for specific ones.
+   is safe. Don't pass colors unless asked for specific ones.
 4. Seed each milestone list with tasks from the breakdown — one task per
    deliverable/slice, with a markdown description (scope summary, acceptance
    sketch) and a priority where the breakdown implies one. Use subtasks
@@ -41,15 +41,15 @@ Goal: mirror the project's milestone breakdown into the tracker.
    breakdown implies dependencies.
 6. Mirror the spec and plan documents into the Doc Hub (see **Docs** below).
 
-**David must pre-create in the app — the MCP cannot:**
+**The project owner must pre-create in the app — the MCP cannot:**
 
 - The MCP connection itself (Project → MCP tab → Connections). Capability
   **`full`** for the bootstrap session — `create_list` is gated at `full`;
-  steady-state work after bootstrap runs fine on `read_write` if David prefers
-  to drop privileges afterwards.
+  steady-state work after bootstrap runs fine on `read_write` if the owner
+  prefers to drop privileges afterwards.
 - Doc Hub folders (e.g. `Specs`, `Plans`) — there is no create-folder tool.
 
-If a folder you need is missing, ask David. Don't work around it.
+If a folder you need is missing, ask the project owner. Don't work around it.
 
 ## Keeping the tracker current (every session)
 
@@ -57,8 +57,8 @@ If a folder you need is missing, ask David. Don't work around it.
   when starting; when the slice lands, move it forward. Don't batch stage
   moves to the end of the session.
 - **Parent/deliverable tasks end at `In review`, never `Done`.** Moving a
-  parent to In review triggers an automation that assigns David to review it;
-  only David (or Claude after David's explicit sign-off) moves it to Done.
+  parent to In review triggers an automation that assigns the project owner to review it;
+  only they (or the agent after their explicit sign-off) move it to Done.
   The summary comment lands with the In review move. Fine-grained subtasks
   may go straight to Done — their descriptions are the story.
 - **Comment per meaningful slice** (`add_comment`) — when you finish or
@@ -71,7 +71,7 @@ If a folder you need is missing, ask David. Don't work around it.
   `Polish / Deferred`, tagged with the relevant milestone tag (`M1`, `M2`, …),
   filed the moment you find it. A discovery that *does* block you becomes a
   task in the milestone list plus a `blocked-by` relation on the stalled task.
-- **Reference, don't repeat.** Mention related tasks by bare key (e.g. `TR-12`,
+- **Reference, don't repeat.** Mention related tasks by bare key (e.g. `WR-42`,
   whatever this project's key prefix is) in descriptions and comments — keys
   auto-link into reference chips with backlinks. `@member-email` becomes a
   mention chip. To link a **doc**, write `@[doc:<id>]` (the id from `list_docs`
@@ -89,7 +89,7 @@ Comments and descriptions are read by a human in the app, not by another agent.
 - Markdown, formatted: short paragraphs, bullet or numbered lists. Never a
   wall of prose.
 - **Titles are plain names** — no numbering prefixes like "Plan task 3 — …";
-  the TR key already identifies the task, and the pointer to the plan section
+  the task's key already identifies it, and the pointer to the plan section
   belongs in the description ("Full steps: M1 plan, Task 3").
 - **Plain language, no code jargon.** Describe outcomes and behavior ("invite
   links now expire correctly and offer a resend"), not internals ("refactored
@@ -103,11 +103,11 @@ Comments and descriptions are read by a human in the app, not by another agent.
   > - Also tightened the expiry check that let some stale links through.
   > - Relevant files: `server/api/invites.ts`, `app/pages/invite.vue`
 
-## Roadmap module (when David enables it)
+## Roadmap module (when enabled on the project)
 
 The project can mirror its milestone plan into the client-facing **Roadmap**
 module. If `get_roadmap` errors with "module is not enabled", skip this — ask
-David rather than working around it.
+the project owner rather than working around it.
 
 - `get_roadmap` first: the milestone tree with ids — roadmap tools address
   milestones/items **by id** (unlike task tools), since names aren't unique.
@@ -122,10 +122,10 @@ David rather than working around it.
   capability and `confirm: true`; milestone deletion takes its sub-milestones
   and all items with it.
 
-## GitHub module (when David connects a repo)
+## GitHub module (when a repo is connected)
 
 If the project has GitHub connected (the tools error with "module is not
-enabled" otherwise — ask David rather than working around it), close the loop
+enabled" otherwise — ask the project owner rather than working around it), close the loop
 between code and tracker:
 
 - **Link the PR back to its task the moment you open one** — an `add_comment`
@@ -145,14 +145,14 @@ Every plan and spec markdown produced for this project is mirrored in the
 Doc Hub:
 
 1. `list_folders` → pick the fitting folder (`Specs`, `Plans`, …). If no
-   fitting folder exists, ask David — don't dump everything at the root.
+   fitting folder exists, ask the project owner — don't dump everything at the root.
 2. `create_doc` with the full markdown body; apply doc-tags if fitting ones
    exist.
 3. On revisions, `update_doc` — it replaces the **full body** and creates a new
    version. If it's refused because someone is editing the doc live in the
    app, retry shortly; never work around the refusal.
 
-## What the MCP cannot do (ask David instead)
+## What the MCP cannot do (ask the project owner instead)
 
 | Need | Why |
 |---|---|

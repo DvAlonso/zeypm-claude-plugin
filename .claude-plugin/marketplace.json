@@ -1,7 +1,7 @@
 {
   "name": "zeypm",
   "description": "Agent tooling for projects tracked in zeypm — the tracking skill, reminder hook, and session conventions, always current.",
-  "owner": { "name": "David Alonso", "url": "https://github.com/DvAlonso" },
+  "owner": { "name": "zeypm", "url": "https://zeypm.com" },
   "plugins": [
     {
       "name": "zeypm",
