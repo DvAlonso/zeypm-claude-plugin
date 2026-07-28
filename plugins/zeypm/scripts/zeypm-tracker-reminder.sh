@@ -17,6 +17,15 @@
 # `"name":"mcp__…zeypm…__create_task"`-shaped string, the duty grep matches.
 # Acceptable — it only suppresses a reminder, never blocks anything.
 
+# --- Only act in projects actually wired to zeypm: a zeypm server in the
+# project's .mcp.json, a zeypm section in CLAUDE.md, or a vendored copy of the
+# tracking skill. Keeps the hook silent everywhere else when the plugin is
+# enabled at user scope.
+proj="${CLAUDE_PROJECT_DIR:-.}"
+grep -qsi zeypm "$proj/.mcp.json" "$proj/CLAUDE.md" \
+  || [ -d "$proj/.claude/skills/zeypm-tracking" ] \
+  || exit 0
+
 payload="$(cat 2>/dev/null)" || exit 0
 
 transcript="$(printf '%s' "$payload" | sed -n 's/.*"transcript_path":"\([^"]*\)".*/\1/p')"

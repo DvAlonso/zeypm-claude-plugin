@@ -7,14 +7,31 @@ the app's Resources tab — updates ship automatically when this repo moves.
 
 ## Install
 
+**Just for yourself:**
+
 ```
 /plugin marketplace add DvAlonso/zeypm-claude-plugin
-/plugin install zeypm@zeypm --scope project
+/plugin install zeypm@zeypm
 ```
 
-`--scope project` puts the plugin in the project's `.claude/settings.json` so
-every agent working in the repo gets it; use `--scope user` to enable it for
-yourself across all projects instead.
+This enables the plugin across all your projects — which is safe: its
+session context and reminders only activate in projects that are actually
+wired to zeypm (a `zeypm` server in the project's `.mcp.json`, or an existing
+vendored setup). Everywhere else it stays silent.
+
+**For the whole team (shared repo):**
+
+```
+claude plugin marketplace add DvAlonso/zeypm-claude-plugin --scope project
+claude plugin install zeypm@zeypm --scope project
+```
+
+Both commands matter: together they record the marketplace
+(`extraKnownMarketplaces`) and the plugin (`enabledPlugins`) in the repo's
+`.claude/settings.json` — commit that file. Teammates are then offered the
+plugin on their first session (workspace trust, then a one-time install
+approval in `/plugin`); nothing installs silently, by design. Each teammate
+still completes their own MCP OAuth (below).
 
 ## What's inside
 
