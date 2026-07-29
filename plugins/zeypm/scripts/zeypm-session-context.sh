@@ -24,3 +24,8 @@ if [ -f "$proj/.claude/zeypm-conventions.md" ]; then
   printf '\n## This project'"'"'s tracking conventions (.claude/zeypm-conventions.md)\n\n'
   cat "$proj/.claude/zeypm-conventions.md"
 fi
+
+# userConfig overrides ride along as context so the skill can honor them.
+if [ "${CLAUDE_PLUGIN_OPTION_OFFER_SEEDING:-true}" = "false" ]; then
+  printf '\nUser setting: never offer to seed a tracker structure — skip the zeypm-tracking skill'"'"'s seeding offer entirely.\n'
+fi

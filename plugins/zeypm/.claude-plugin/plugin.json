@@ -1,7 +1,8 @@
 {
   "name": "zeypm",
   "displayName": "zeypm tracking",
-  "version": "0.2.0",
+  "version": "0.3.0",
+  "license": "MIT",
   "description": "Conventions and automation for keeping a zeypm-tracked project current: the zeypm-tracking skill, a configurable Stop reminder, and session-start tracking context. Pair it with your project's zeypm MCP connection.",
   "author": { "name": "zeypm", "url": "https://zeypm.com" },
   "homepage": "https://github.com/DvAlonso/zeypm-claude-plugin",
@@ -18,6 +19,12 @@
       "type": "boolean",
       "title": "Inject session context",
       "description": "Inject the zeypm tracking summary (and the project's .claude/zeypm-conventions.md, when present) at session start. Disable if you carry these in your own CLAUDE.md.",
+      "default": true
+    },
+    "offer_seeding": {
+      "type": "boolean",
+      "title": "Offer tracker seeding",
+      "description": "Allow the skill to offer seeding a tracker structure (milestone lists, tags, relations) when a project's tracker is empty and a written plan exists. Disable if you never want that proposed.",
       "default": true
     }
   }

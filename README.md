@@ -57,6 +57,8 @@ Set at install time (`--config key=value`) or later via the `/plugin` panel:
 - `stop_reminder_mode` — `nudge` (default) · `block` · `off`.
 - `inject_context` — `true` (default) · `false` if you keep the tracking
   contract in your own CLAUDE.md.
+- `offer_seeding` — `true` (default) · `false` to never be offered a seeded
+  tracker structure, even on an empty tracker.
 
 ## Connect your project's zeypm MCP
 
@@ -85,4 +87,4 @@ the next session. To force it: `/plugin marketplace update zeypm`.
 
 This repo is a build artifact — the canonical sources live in the zeypm
 codebase and are published here by a release script. Issues and ideas are
-welcome; code changes land upstream, not via PRs here.
+welcome; code changes land upstream, not via PRs here. MIT licensed.
