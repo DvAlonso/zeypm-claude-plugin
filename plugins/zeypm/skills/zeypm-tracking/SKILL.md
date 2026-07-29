@@ -136,6 +136,12 @@ Comments and descriptions are read by a human in the app, not by another agent.
 
 - Markdown, formatted: short paragraphs, bullet or numbered lists. Never a
   wall of prose.
+- **Never hard-wrap.** Write every paragraph and bullet as ONE long line and
+  let the app reflow it to the reader's column. A newline in the middle of a
+  paragraph is kept and renders as a real line break, so column-wrapped text
+  arrives ragged and doesn't reflow. This holds for everything you write
+  through the MCP — descriptions, comments, doc bodies, KB articles — even
+  when the source you're mirroring is wrapped in the repo.
 - **Titles are plain names** — no numbering prefixes like "Plan task 3 — …";
   the task's key already identifies it, and the pointer to the plan section
   belongs in the description ("Full steps: M1 plan, Task 3").
@@ -196,8 +202,9 @@ When the conventions file says yes:
 1. `list_folders` → pick the fitting folder (`Specs`, `Plans`, …). If none
    fits, create one (`create_folder`) following the project's naming — or ask
    when unsure. Don't dump everything at the root.
-2. `create_doc` with the full markdown body; apply doc-tags if fitting ones
-   exist.
+2. `create_doc` with the full markdown body — **unwrapped** (see Writing
+   style; repo markdown is usually wrapped, so unwrap it as you mirror it).
+   Apply doc-tags if fitting ones exist.
 3. On revisions, `update_doc` — it replaces the **full body** and creates a new
    version. If it's refused because someone is editing the doc live in the
    app, retry shortly; never work around the refusal.

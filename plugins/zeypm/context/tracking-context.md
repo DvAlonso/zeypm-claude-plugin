@@ -23,6 +23,10 @@ project). The tracker is part of the work, not an afterthought.
   numbered lists, plain language, no code jargon in the narrative. File
   references only when they genuinely help — and then at the end of the
   comment, as a short bullet list.
+- **Never hard-wrap what you send.** One long line per paragraph and bullet —
+  descriptions, comments, doc bodies, KB articles. The app reflows text to the
+  reader's column; a newline you add mid-paragraph survives as a visible line
+  break. Repo markdown is usually wrapped, so unwrap it when you mirror it.
 - **Plans and specs are mirrored to the Doc Hub** when the project's
   conventions say so.
 
