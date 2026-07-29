@@ -49,6 +49,9 @@ still completes their own MCP OAuth (below).
 - **Session-start context** — a short summary of the tracking contract plus
   your project's conventions file, injected automatically; no CLAUDE.md paste
   needed.
+- **`/zeypm:connect` command** — wires the current project to its zeypm MCP
+  connection: paste the connection URL, it writes `.mcp.json` for you, then
+  `/mcp` completes OAuth.
 
 ## Configuration
 
@@ -62,21 +65,17 @@ Set at install time (`--config key=value`) or later via the `/plugin` panel:
 
 ## Connect your project's zeypm MCP
 
-The plugin assumes the project has a zeypm MCP connection — that stays a
-per-project manual step, because each connection is scoped and authorized
-individually:
+Each connection is scoped and authorized per project, so minting it stays an
+in-app step — everything after that is one command:
 
 1. In zeypm, open your project → **MCP** tab → **Connections** and create a
-   connection (capability `read_write`; `full` if the agent should bootstrap
+   connection (capability `read_write`; `full` if the agent should seed
    lists and manage docs). Copy the connection URL.
-2. Add it to the project, then complete OAuth via `/mcp` inside Claude Code:
+2. Run **`/zeypm:connect`** in Claude Code and paste the URL — it writes the
+   project's `.mcp.json`; then `/mcp` completes OAuth in the browser.
 
-   ```
-   claude mcp add --transport http --scope project zeypm <connection-url>
-   ```
-
-   (`--scope project` shares the server via `.mcp.json`; drop it to keep the
-   connection personal.)
+Prefer the CLI? `claude mcp add --transport http --scope project zeypm
+<connection-url>` does the same thing.
 
 ## Updating
 
