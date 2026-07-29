@@ -1,10 +1,24 @@
 {
   "name": "zeypm",
   "displayName": "zeypm tracking",
-  "version": "0.1.3",
-  "description": "Conventions and automation for keeping a zeypm-tracked project current: the zeypm-tracking skill, a non-blocking Stop reminder, and session-start tracking context. Pair it with your project's zeypm MCP connection.",
+  "version": "0.2.0",
+  "description": "Conventions and automation for keeping a zeypm-tracked project current: the zeypm-tracking skill, a configurable Stop reminder, and session-start tracking context. Pair it with your project's zeypm MCP connection.",
   "author": { "name": "zeypm", "url": "https://zeypm.com" },
   "homepage": "https://github.com/DvAlonso/zeypm-claude-plugin",
   "repository": "https://github.com/DvAlonso/zeypm-claude-plugin",
-  "keywords": ["zeypm", "tracker", "project-management", "mcp"]
+  "keywords": ["zeypm", "tracker", "project-management", "mcp"],
+  "userConfig": {
+    "stop_reminder_mode": {
+      "type": "string",
+      "title": "Stop reminder mode",
+      "description": "What happens when a session changes code without a tracker update: 'nudge' (default — a gentle, non-blocking message), 'block' (the turn only ends after a tracker write), or 'off'.",
+      "default": "nudge"
+    },
+    "inject_context": {
+      "type": "boolean",
+      "title": "Inject session context",
+      "description": "Inject the zeypm tracking summary (and the project's .claude/zeypm-conventions.md, when present) at session start. Disable if you carry these in your own CLAUDE.md.",
+      "default": true
+    }
+  }
 }

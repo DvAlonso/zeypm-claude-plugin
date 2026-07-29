@@ -35,13 +35,28 @@ still completes their own MCP OAuth (below).
 
 ## What's inside
 
-- **`zeypm-tracking` skill** — the full conventions for keeping the project's
-  zeypm tracker and Doc Hub current: session-start routine, first-run
-  bootstrap, stage discipline, writing style, what the MCP cannot do.
-- **Stop reminder hook** — nudges (never blocks) when a session changed code
-  without a single tracker write.
-- **Session-start context** — a short summary of the tracking contract,
-  injected automatically; no CLAUDE.md paste needed.
+- **`zeypm-tracking` skill** — how agents keep the project's zeypm tracker
+  and Doc Hub current. On first run it *interviews you* about how your
+  project works (stage flow, where findings go, doc mirroring, roadmap) and
+  stores the confirmed answers in `.claude/zeypm-conventions.md` — committed
+  with your repo, editable by hand, and always winning over the skill's
+  defaults. It adapts to your tracker's structure; it never imposes one
+  (seeding a structure is offered only for an empty tracker with a written
+  plan).
+- **Stop reminder hook** — fires when a session changed code without a single
+  tracker write. Mode is yours: `nudge` (default, non-blocking), `block`, or
+  `off`.
+- **Session-start context** — a short summary of the tracking contract plus
+  your project's conventions file, injected automatically; no CLAUDE.md paste
+  needed.
+
+## Configuration
+
+Set at install time (`--config key=value`) or later via the `/plugin` panel:
+
+- `stop_reminder_mode` — `nudge` (default) · `block` · `off`.
+- `inject_context` — `true` (default) · `false` if you keep the tracking
+  contract in your own CLAUDE.md.
 
 ## Connect your project's zeypm MCP
 

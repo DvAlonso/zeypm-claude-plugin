@@ -1,6 +1,6 @@
 ---
 name: zeypm-tracking
-description: Use when starting any session that will change code, before calling any zeypm MCP tool, when finishing or advancing a slice of work, when discovering non-blocking issues mid-work, or when producing a plan or spec document — the conventions for keeping this project's zeypm tracker and Doc Hub current.
+description: Use when starting any session that will change code, before calling any zeypm MCP tool, when finishing or advancing a slice of work, when discovering non-blocking issues mid-work, or when producing a plan or spec document — how to keep this project's zeypm tracker and Doc Hub current, and how to learn the project's own conventions instead of assuming them.
 ---
 
 # zeypm tracking conventions
@@ -10,70 +10,113 @@ MCP server. The connection is per-project — every tool call is already scoped
 to this project; there is nothing to select. You are expected to keep the
 tracker current *as you work*, not reconstruct it afterwards.
 
+## How to read this skill
+
+Two kinds of content live here. **Facts** about the MCP — tool mechanics,
+capability tiers, what only the project owner can do — are always true.
+**Workflow defaults** — where findings go, how stages move, what gets
+mirrored — yield, in this order:
+
+1. The project owner's explicit instructions (in `CLAUDE.md` or in chat).
+2. The project's stored conventions: `.claude/zeypm-conventions.md` (see
+   **First run** below).
+3. The structure that already exists in the tracker.
+4. This skill's defaults.
+
+Never impose a workflow on a project that has one — work with what's there.
+When something seems subpar, **propose** a change and let the owner decide.
+
 ## Session start
 
 1. Call `get_workspace` first. It returns the project's lists (each with its
    stage pipeline) and tags. Every other tool takes these **names** — list
    names, stage names, tag names, member emails — never raw IDs.
-2. If no `M<n> - …` milestone lists exist yet, run **Bootstrap** below.
-3. Find the task(s) covering the work at hand (`search_tasks` to jump,
+2. Read `.claude/zeypm-conventions.md` if it exists — it records how this
+   project wants stages moved, findings filed, and docs mirrored. If it
+   contradicts what `get_workspace` shows (renamed stages, a missing list),
+   ask the owner and update the file rather than guessing.
+3. No conventions file yet? Run **First run** below before your first write.
+4. Find the task(s) covering the work at hand (`search_tasks` to jump,
    `list_tasks` to browse), or create one. Move it to an in-progress stage when
    you actually start.
-4. If the Knowledge base module is on, read the relevant runbook articles
+5. If the Knowledge base module is on, read the relevant runbook articles
    (`list_kb`, `get_article`) before working in an unfamiliar area — that is
    what they exist for.
 
-## Bootstrap (first run only)
+## First run — learn how this project works
 
-Goal: mirror the project's milestone breakdown into the tracker.
+The first session in a project (no `.claude/zeypm-conventions.md` yet),
+interview the owner briefly instead of assuming. Ask only what applies,
+grounded in what `get_workspace` actually returned:
 
-1. Read the development plan / milestone breakdown in `docs/`. If only the
-   functional spec exists and there is no milestone breakdown yet, **stop and
-   ask the project owner** — never invent milestones.
-2. Create one list per milestone via `create_list`, named `M1 - <short name>`,
-   `M2 - <short name>`, … Let them inherit the project pipeline; don't invent
-   custom stages.
-3. Create a `Polish / Deferred` list, and one milestone tag per milestone
-   (`M1`, `M2`, …) via `create_tag` — it's idempotent, so re-running bootstrap
-   is safe. Don't pass colors unless asked for specific ones.
-4. Seed each milestone list with tasks from the breakdown — one task per
-   deliverable/slice, with a markdown description (scope summary, acceptance
-   sketch) and a priority where the breakdown implies one. Use subtasks
-   (`parentKey`) where a slice has clear sub-steps.
-5. Wire ordering with `add_relation` (`blocks` / `blocked-by`) where the
-   breakdown implies dependencies.
-6. Mirror the spec and plan documents into the Doc Hub (see **Docs** below).
+- **Stages & assignment.** "Your lists use stages X → Y → Z. How should I
+  move tasks as I work, and should I assign anyone when I do?"
+- **Finishing.** "When I finish something, where should it stop — a review
+  stage for your sign-off, or straight to Done?" (No preference? Default to
+  leaving final closure to a human.)
+- **Findings.** "Where should non-blocking discoveries — bugs, polish items,
+  tech debt, deferrals — be filed, and with which tags?"
+- **Docs.** "Should plan/spec markdown I produce be mirrored to the Doc Hub,
+  and into which folder?"
+- **Roadmap** (only if the module is enabled). "Should I keep roadmap item
+  statuses in sync as work moves?"
+- **Seeding** (only if the tracker is essentially empty — see the next
+  section).
 
-**The project owner must pre-create in the app — the MCP cannot:**
+Write the confirmed answers to `.claude/zeypm-conventions.md` — short
+markdown bullets, committed with the repo so every agent and teammate shares
+them. The owner can edit that file directly at any time; it always wins over
+this skill's defaults.
 
-- The MCP connection itself (Project → MCP tab → Connections). Capability
-  **`full`** for the bootstrap session — `create_list` is gated at `full`;
-  steady-state work after bootstrap runs fine on `read_write` if the owner
-  prefers to drop privileges afterwards.
-- Doc Hub folders (e.g. `Specs`, `Plans`) — there is no create-folder tool.
+## Seeding a tracker structure (an offer, never a default)
 
-If a folder you need is missing, ask the project owner. Don't work around it.
+Only relevant when the tracker is essentially empty **and** the project has a
+written plan or breakdown that decomposes the work into phases/milestones. If
+both hold, *offer* to seed — for example: one list per milestone
+(`M1 - <short name>`, `M2 - …`), a catch-all list for deferrals, one
+milestone tag per phase, one task per deliverable (markdown description,
+scope summary, acceptance sketch, subtasks via `parentKey` where a slice has
+clear sub-steps), and `blocks` / `blocked-by` relations where the plan
+implies ordering.
+
+- That `M<n>` shape is **one** convention, not *the* convention — adapt the
+  naming to the owner's vocabulary, and if they prefer a flat backlog or
+  their own structure, use that.
+- Never invent milestones that aren't in a plan document — ask.
+- Never restructure an existing tracker uninvited.
+- Record the outcome (including "owner declined — flat backlog") in
+  `.claude/zeypm-conventions.md` so later sessions don't re-ask.
+
+Facts that apply when seeding:
+
+- `create_list` is gated at the **`full`** capability; steady-state work after
+  seeding runs fine on `read_write` if the owner prefers to drop privileges
+  afterwards.
+- **The project owner must pre-create in the app — the MCP cannot:** the MCP
+  connection itself (Project → MCP tab → Connections), and Doc Hub folders
+  (there is no create-folder tool). If something you need is missing, ask —
+  don't work around it.
 
 ## Keeping the tracker current (every session)
 
 - **Stage moves are part of the work.** `update_task` to an in-progress stage
-  when starting; when the slice lands, move it forward. Don't batch stage
-  moves to the end of the session.
-- **Parent/deliverable tasks end at `In review`, never `Done`.** Moving a
-  parent to In review triggers an automation that assigns the project owner to review it;
-  only they (or the agent after their explicit sign-off) move it to Done.
-  The summary comment lands with the In review move. Fine-grained subtasks
-  may go straight to Done — their descriptions are the story.
+  when starting; when the slice lands, move it forward — per the project's
+  conventions file. Don't batch stage moves to the end of the session.
+- **An agent doesn't certify its own work as done.** Follow the finishing
+  convention recorded on first run. Some projects automate assignment or
+  review handoff when a task enters a given stage (the app's automation
+  rules); the conventions file records what this project expects. When in
+  doubt, stop at a review stage and let the owner close it.
 - **Comment per meaningful slice** (`add_comment`) — when you finish or
   meaningfully advance something. Not per file edit, and not a play-by-play.
 - **Prefer structure over prose.** Moving a stage, setting a priority, or
   adding a relation beats writing "this is blocked now" in a comment. Add the
   comment too when the *why* needs context.
 - **Findings never evaporate.** A mid-work discovery that doesn't block you —
-  bug, polish item, tech debt, deliberate deferral — becomes a task in
-  `Polish / Deferred`, tagged with the relevant milestone tag (`M1`, `M2`, …),
-  filed the moment you find it. A discovery that *does* block you becomes a
-  task in the milestone list plus a `blocked-by` relation on the stalled task.
+  bug, polish item, tech debt, deliberate deferral — becomes a task in the
+  destination the conventions file names, filed the moment you find it. A
+  discovery that *does* block you becomes a task plus a `blocked-by` relation
+  on the stalled task.
 - **Reference, don't repeat.** Mention related tasks by bare key (e.g. `WR-42`,
   whatever this project's key prefix is) in descriptions and comments — keys
   auto-link into reference chips with backlinks. `@member-email` becomes a
@@ -85,7 +128,7 @@ If a folder you need is missing, ask the project owner. Don't work around it.
   link PRs, issues, and commits of the project's **connected** repos — same
   rule: unconnected repos and malformed locators stay literal.
 
-## Writing style (descriptions & comments)
+## Writing style (defaults — the owner's taste wins)
 
 Comments and descriptions are read by a human in the app, not by another agent.
 
@@ -108,13 +151,14 @@ Comments and descriptions are read by a human in the app, not by another agent.
 
 ## Roadmap module (when enabled on the project)
 
-The project can mirror its milestone plan into the client-facing **Roadmap**
-module. If `get_roadmap` errors with "module is not enabled", skip this — ask
-the project owner rather than working around it.
+The project can mirror its plan into the client-facing **Roadmap** module. If
+`get_roadmap` errors with "module is not enabled", skip this — ask the
+project owner rather than working around it. Whether you maintain the
+roadmap at all is a first-run question; only do it when confirmed.
 
 - `get_roadmap` first: the milestone tree with ids — roadmap tools address
   milestones/items **by id** (unlike task tools), since names aren't unique.
-- Mirror the same milestones as the task lists (`create_milestone`; sub-parts
+- Mirror the project's planning structure (`create_milestone`; sub-parts
   via `parentMilestoneId`, one level max) and one item per deliverable
   (`create_roadmap_item`).
 - Keep statuses current as work moves: planned → in_progress → in_review →
@@ -136,16 +180,16 @@ between code and tracker:
   `get_linked_prs` reads; a PR that isn't mentioned anywhere is invisible to
   the tracker.
 - `get_pr_status` / `get_ci_status` give live PR + CI state — check CI before
-  declaring a slice done or moving its task to In review, and say what you saw
-  ("CI green, 12 checks") rather than "should be fine".
+  declaring a slice done or moving its task to a review stage, and say what you
+  saw ("CI green, 12 checks") rather than "should be fine".
 - `list_recent_commits` orients a cold session on what recently landed.
 - `repo` can be omitted when the project has exactly one connected repo; with
   several, pass `repo: "owner/name"`.
 
-## Docs → Doc Hub
+## Docs → Doc Hub (when the project mirrors docs)
 
-Every plan and spec markdown produced for this project is mirrored in the
-Doc Hub:
+Whether plans and specs are mirrored — and where — is a first-run question.
+When the conventions file says yes:
 
 1. `list_folders` → pick the fitting folder (`Specs`, `Plans`, …). If no
    fitting folder exists, ask the project owner — don't dump everything at the root.
