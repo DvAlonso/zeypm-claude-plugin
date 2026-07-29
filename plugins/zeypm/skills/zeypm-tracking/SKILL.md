@@ -29,8 +29,11 @@ When something seems subpar, **propose** a change and let the owner decide.
 ## Session start
 
 1. Call `get_workspace` first. It returns the project's lists (each with its
-   stage pipeline) and tags. Every other tool takes these **names** — list
-   names, stage names, tag names, member emails — never raw IDs.
+   stage pipeline), tags, the **`agent` identity this session writes as**
+   (assignments to "the agent" mean that user), and the active member roster
+   (assignee emails; AI accounts flagged `isAgent`). Every other tool takes
+   these **names** — list names, stage names, tag names, member emails —
+   never raw IDs.
 2. Read `.claude/zeypm-conventions.md` if it exists — it records how this
    project wants stages moved, findings filed, and docs mirrored. If it
    contradicts what `get_workspace` shows (renamed stages, a missing list),
@@ -93,9 +96,8 @@ Facts that apply when seeding:
   seeding runs fine on `read_write` if the owner prefers to drop privileges
   afterwards.
 - **The project owner must pre-create in the app — the MCP cannot:** the MCP
-  connection itself (Project → MCP tab → Connections), and Doc Hub folders
-  (there is no create-folder tool). If something you need is missing, ask —
-  don't work around it.
+  connection itself (Project → MCP tab → Connections). If something you need
+  is missing, ask — don't work around it.
 
 ## Keeping the tracker current (every session)
 
@@ -191,8 +193,9 @@ between code and tracker:
 Whether plans and specs are mirrored — and where — is a first-run question.
 When the conventions file says yes:
 
-1. `list_folders` → pick the fitting folder (`Specs`, `Plans`, …). If no
-   fitting folder exists, ask the project owner — don't dump everything at the root.
+1. `list_folders` → pick the fitting folder (`Specs`, `Plans`, …). If none
+   fits, create one (`create_folder`) following the project's naming — or ask
+   when unsure. Don't dump everything at the root.
 2. `create_doc` with the full markdown body; apply doc-tags if fitting ones
    exist.
 3. On revisions, `update_doc` — it replaces the **full body** and creates a new
@@ -223,7 +226,7 @@ ask the project owner rather than working around it.
 | Need | Why |
 |---|---|
 | Create ORG-level tags | `create_tag` makes project-level tags only; org tags are app-managed |
-| Create Doc Hub folders | No tool; `folderId` must already exist |
+| Create ORG-scope Doc Hub folders | `create_folder` is project-scope only; org folders are app-managed |
 | Delete lists, stages, or tags | Not exposed over MCP (archive/rename only) |
 | Edit or delete others' comments | Own comments only |
 | Publish or mark-reviewed a KB article | Deliberate: asserting content is correct today is a person's call |
@@ -235,7 +238,7 @@ deletion is permanent and reserved for true mistakes (duplicates, test noise).
 
 | Tool | Note |
 |---|---|
-| `get_workspace` | Always first — lists, stages, tags, by name |
+| `get_workspace` | Always first — lists, stages, tags, member emails, and your own agent identity |
 | `list_tasks` / `search_tasks` | Browse (optionally by list/stage) vs jump (top-8 hits) |
 | `get_task` | Full detail: description, tags, relations, subtasks, comments |
 | `create_task` | List name + tag names; `parentKey` makes a subtask (inherits parent's list) |
@@ -249,6 +252,7 @@ deletion is permanent and reserved for true mistakes (duplicates, test noise).
 | `add_stage` / `rename_stage` / `reorder_stages` | Edit one list's pipeline (fork-on-write) |
 | `create_doc` / `update_doc` | Doc Hub write; update = full-body replace, new version |
 | `list_folders` / `list_docs` / `search_docs` / `get_doc` | Doc Hub read |
+| `create_folder` | New Doc Hub folder in the pinned project; `parentId` nests (org scope stays app-managed) |
 | `add_doc_comment` | Comment on a doc |
 | `get_pr_status` / `get_ci_status` | Live PR state / CI checks rollup (GitHub module, connected repos) |
 | `list_recent_commits` | Newest commits of a connected repo |
