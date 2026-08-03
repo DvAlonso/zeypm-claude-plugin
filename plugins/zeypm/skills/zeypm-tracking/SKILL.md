@@ -114,6 +114,10 @@ Facts that apply when seeding:
 - **Prefer structure over prose.** Moving a stage, setting a priority, or
   adding a relation beats writing "this is blocked now" in a comment. Add the
   comment too when the *why* needs context.
+- **Batch, never loop.** Reading several tasks is one `get_tasks` call, not one
+  `get_task` each. Updating several is one `bulk_update_tasks` — `keys` plus
+  shared fields when they all get the same patch, `updates` when the patches
+  differ. A loop of single-task calls is the slow way to do both.
 - **Findings never evaporate.** A mid-work discovery that doesn't block you —
   bug, polish item, tech debt, deliberate deferral — becomes a task in the
   destination the conventions file names, filed the moment you find it. A
@@ -248,9 +252,10 @@ deletion is permanent and reserved for true mistakes (duplicates, test noise).
 | `get_workspace` | Always first — lists, stages, tags, member emails, and your own agent identity |
 | `list_tasks` / `search_tasks` | Browse (optionally by list/stage) vs jump (top-8 hits) |
 | `get_task` | Full detail: description, tags, relations, subtasks, comments |
+| `get_tasks` | The same, for up to 20 keys in ONE call — never loop `get_task`. Comments windowed to the newest 5 (`commentCount` gives the total) |
 | `create_task` | List name + tag names; `parentKey` makes a subtask (inherits parent's list) |
 | `update_task` | Partial update; moves stage/list/parent; `assignees` by member email |
-| `bulk_update_tasks` | One shared patch across ≤50 tasks, all-or-nothing |
+| `bulk_update_tasks` | ≤50 tasks in one call, all-or-nothing. `keys` + shared fields when the patch is the same; `updates: [{key, …}]` when it differs per task |
 | `add_comment` | Markdown auto-converted; bare keys → chips; `@email` → mention |
 | `set_task_tags` | REPLACES the full tag set (`[]` clears) |
 | `create_tag` | New PROJECT-level tag; idempotent by (name, kind); optional `#RRGGBB` color, kind `task`/`doc` |
