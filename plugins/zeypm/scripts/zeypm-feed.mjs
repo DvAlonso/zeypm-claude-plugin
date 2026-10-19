@@ -139,15 +139,20 @@ function contentText(response) {
 
 /** Task keys a tracker call names in its input (key, keys, parentKey) and its response. */
 export function keysFromTrackerCall(tool, input, response) {
+  const fromInput = []
+  const fromResponse = []
+  const i = input && typeof input === 'object' ? input : {}
+  for (const f of ['key', 'parentKey']) if (typeof i[f] === 'string') fromInput.push(...extractKeys(i[f]))
+  if (Array.isArray(i.keys)) for (const v of i.keys) if (typeof v === 'string') fromInput.push(...extractKeys(v))
+  if (Array.isArray(i.updates)) for (const u of i.updates) if (u && typeof u.key === 'string') fromInput.push(...extractKeys(u.key))
+  const text = typeof response === 'string' ? response : (response && typeof response === 'object' ? contentText(response) ?? '' : '')
+  fromResponse.push(...extractKeys(text))
+  // A create names the task it made in the response and, at most, a parent in
+  // the input: the made one leads, so the screen files the right task.
+  const ordered = /__create_task$/.test(tool) ? [...fromResponse, ...fromInput] : [...fromInput, ...fromResponse]
   const out = []
   const seen = new Set()
-  const add = (k) => { if (k && !seen.has(k)) { seen.add(k); out.push(k) } }
-  const i = input && typeof input === 'object' ? input : {}
-  for (const f of ['key', 'parentKey']) if (typeof i[f] === 'string') for (const k of extractKeys(i[f])) add(k)
-  if (Array.isArray(i.keys)) for (const v of i.keys) if (typeof v === 'string') for (const k of extractKeys(v)) add(k)
-  if (Array.isArray(i.updates)) for (const u of i.updates) if (u && typeof u.key === 'string') for (const k of extractKeys(u.key)) add(k)
-  const text = typeof response === 'string' ? response : (response && typeof response === 'object' ? contentText(response) ?? '' : '')
-  for (const k of extractKeys(text)) add(k)
+  for (const k of ordered) if (k && !seen.has(k)) { seen.add(k); out.push(k) }
   return out
 }
 
