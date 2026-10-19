@@ -7,12 +7,6 @@
             "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-session-context.sh",
             "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-feed.sh",
-            "async": true,
-            "timeout": 10
           }
         ]
       }
@@ -24,55 +18,9 @@
             "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-tracker-reminder.sh",
             "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-feed.sh",
-            "async": true,
-            "timeout": 10
           }
         ]
       }
-    ],
-    "SessionEnd": [
-      { "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-feed.sh", "async": true, "timeout": 10 }] }
-    ],
-    "UserPromptSubmit": [
-      { "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-feed.sh", "async": true, "timeout": 10 }] }
-    ],
-    "PreToolUse": [
-      { "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-feed.sh", "async": true, "timeout": 10 }] },
-      {
-        "matcher": "AskUserQuestion",
-        "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-ask.sh", "timeout": 630 }]
-      }
-    ],
-    "PostToolUse": [
-      { "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-feed.sh", "async": true, "timeout": 10 }] }
-    ],
-    "PostToolUseFailure": [
-      { "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-feed.sh", "async": true, "timeout": 10 }] }
-    ],
-    "TaskCreated": [
-      { "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-feed.sh", "async": true, "timeout": 10 }] }
-    ],
-    "TaskCompleted": [
-      { "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-feed.sh", "async": true, "timeout": 10 }] }
-    ],
-    "Notification": [
-      { "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-feed.sh", "async": true, "timeout": 10 }] }
-    ],
-    "SubagentStart": [
-      { "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-feed.sh", "async": true, "timeout": 10 }] }
-    ],
-    "SubagentStop": [
-      { "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-feed.sh", "async": true, "timeout": 10 }] }
-    ],
-    "PreCompact": [
-      { "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-feed.sh", "async": true, "timeout": 10 }] }
-    ],
-    "PostModelSwitch": [
-      { "hooks": [{ "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/zeypm-feed.sh", "async": true, "timeout": 10 }] }
     ]
   }
 }

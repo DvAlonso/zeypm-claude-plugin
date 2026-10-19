@@ -1,23 +1,15 @@
 {
   "name": "zeypm",
   "description": "Agent tooling for projects tracked in zeypm — the tracking skill, reminder hook, and session conventions, always current.",
-  "owner": {
-    "name": "zeypm",
-    "url": "https://zeypm.com"
-  },
+  "owner": { "name": "zeypm", "url": "https://zeypm.com" },
   "plugins": [
     {
       "name": "zeypm",
       "source": "./plugins/zeypm",
-      "description": "Keeps a zeypm-tracked project current: the zeypm-tracking skill, a configurable Stop reminder hook, session-start tracking context, and an opt-in live feed for zeypm's Agents screen.",
+      "description": "Keeps a zeypm-tracked project current: the zeypm-tracking skill, a configurable Stop reminder hook, and session-start tracking context.",
       "license": "MIT",
       "category": "productivity",
-      "keywords": [
-        "zeypm",
-        "tracker",
-        "project-management",
-        "mcp"
-      ]
+      "keywords": ["zeypm", "tracker", "project-management", "mcp"]
     }
   ]
 }

@@ -29,14 +29,3 @@ fi
 if [ "${CLAUDE_PLUGIN_OPTION_OFFER_SEEDING:-true}" = "false" ]; then
   printf '\nUser setting: never offer to seed a tracker structure — skip the zeypm-tracking skill'"'"'s seeding offer entirely.\n'
 fi
-
-# Live feed (agents control plane): the feed hooks need Claude Code 2.1.274 or
-# newer. Only checked when this machine has a feed config, so everyone else
-# pays nothing. The feed hooks themselves are async and never print.
-feed_data="${CLAUDE_PLUGIN_DATA:-$HOME/.claude/plugins/data/zeypm-zeypm}"
-if [ -f "$feed_data/feed.json" ] && command -v claude >/dev/null 2>&1; then
-  cc_version="$(claude --version 2>/dev/null | head -1 | sed -n 's/^\([0-9][0-9.]*\).*/\1/p')"
-  if [ -n "$cc_version" ] && [ "$(printf '%s\n%s\n' "2.1.274" "$cc_version" | sort -V | head -1)" != "2.1.274" ]; then
-    printf '\nzeypm live feed is off: it needs Claude Code 2.1.274 or newer (you have %s).\n' "$cc_version"
-  fi
-fi
