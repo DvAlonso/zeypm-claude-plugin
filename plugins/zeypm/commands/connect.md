@@ -32,3 +32,7 @@ cannot be guessed or generated here.
 5. Point at what happens next: the first session with the connection live,
    the `zeypm-tracking` skill runs a short interview to learn this project's
    conventions and stores them in `.claude/zeypm-conventions.md`.
+6. Offer the live feed: "Want this project's sessions mirrored on your
+   zeypm Agents screen (what the agent is doing, live, with questions you
+   can answer from there)? Run `/zeypm:feed` — it takes a feed token from
+   Settings → Agents." Do not set it up unasked; it is opt-in.

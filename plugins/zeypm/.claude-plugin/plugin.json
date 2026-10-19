@@ -1,13 +1,21 @@
 {
   "name": "zeypm",
   "displayName": "zeypm tracking",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "license": "MIT",
-  "description": "Conventions and automation for keeping a zeypm-tracked project current: the zeypm-tracking skill, a configurable Stop reminder, and session-start tracking context. Pair it with your project's zeypm MCP connection.",
-  "author": { "name": "zeypm", "url": "https://zeypm.com" },
+  "description": "Conventions and automation for keeping a zeypm-tracked project current: the zeypm-tracking skill, a configurable Stop reminder, session-start tracking context, and an opt-in live feed that mirrors your sessions on zeypm's Agents screen (answer the agent's questions from there). Pair it with your project's zeypm MCP connection.",
+  "author": {
+    "name": "zeypm",
+    "url": "https://zeypm.com"
+  },
   "homepage": "https://github.com/DvAlonso/zeypm-claude-plugin",
   "repository": "https://github.com/DvAlonso/zeypm-claude-plugin",
-  "keywords": ["zeypm", "tracker", "project-management", "mcp"],
+  "keywords": [
+    "zeypm",
+    "tracker",
+    "project-management",
+    "mcp"
+  ],
   "userConfig": {
     "stop_reminder_mode": {
       "type": "string",
@@ -25,6 +33,24 @@
       "type": "boolean",
       "title": "Offer tracker seeding",
       "description": "Allow the skill to offer seeding a tracker structure (milestone lists, tags, relations) when a project's tracker is empty and a written plan exists. Disable if you never want that proposed.",
+      "default": true
+    },
+    "live_feed": {
+      "type": "boolean",
+      "title": "Live session feed",
+      "description": "Mirror this machine's Claude Code sessions on your zeypm Agents screen (needs a feed token from Settings → Agents, set up with /zeypm:feed). Nothing is sent until a project is mapped; file contents and command output never leave the machine.",
+      "default": true
+    },
+    "answer_hold_minutes": {
+      "type": "number",
+      "title": "Answer hold (minutes)",
+      "description": "When the agent asks a question and you have had a zeypm tab open in the last two minutes, how long the CLI waits for your answer from the screen before asking in the terminal instead. At most 10.",
+      "default": 10
+    },
+    "send_message_text": {
+      "type": "boolean",
+      "title": "Send prompt and reply text",
+      "description": "Include your prompts and the agent's end-of-turn replies (capped at 4096 characters) in the live feed. Off sends only the task keys found in them.",
       "default": true
     }
   }

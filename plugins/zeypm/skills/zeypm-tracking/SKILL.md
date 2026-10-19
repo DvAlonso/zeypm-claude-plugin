@@ -173,7 +173,10 @@ roadmap at all is a first-run question; only do it when confirmed.
 - Mirror the project's planning structure (`create_milestone`; sub-parts
   via `parentMilestoneId`, one level max) and one item per deliverable
   (`create_roadmap_item`).
-- Keep statuses current as work moves: planned → in_progress → in_review →
+- Prefer linking an item to the tasks that make it up (`taskKeys` on
+  `create_roadmap_item` / `update_roadmap_item`): its status then follows
+  them, and setting it by hand is refused. Leave polish and fixes unlinked.
+- Keep hand-set statuses current as work moves: planned → in_progress → in_review →
   shipped, and **blocked** when something is stuck — a blocked item marks its
   whole milestone blocked on the roadmap, which clients can see (often the
   blocker IS the client — waiting on content or approval).
@@ -250,7 +253,7 @@ deletion is permanent and reserved for true mistakes (duplicates, test noise).
 | Tool | Note |
 |---|---|
 | `get_workspace` | Always first — lists, stages, tags, member emails, and your own agent identity |
-| `list_tasks` / `search_tasks` | Browse (optionally by list/stage) vs jump (top-8 hits) |
+| `list_tasks` / `search_tasks` | Browse (optionally by list/stage) vs full-text search over titles, descriptions and comments (each hit says where it matched; `scope: "all"` widens to every project) |
 | `get_task` | Full detail: description, tags, relations, subtasks, comments |
 | `get_tasks` | The same, for up to 20 keys in ONE call — never loop `get_task`. Comments windowed to the newest 5 (`commentCount` gives the total) |
 | `create_task` | List name + tag names; `parentKey` makes a subtask (inherits parent's list) |
@@ -261,7 +264,11 @@ deletion is permanent and reserved for true mistakes (duplicates, test noise).
 | `create_tag` | New PROJECT-level tag; idempotent by (name, kind); optional `#RRGGBB` color, kind `task`/`doc` |
 | `add_relation` / `remove_relation` | `blocks` / `blocked-by` / `relates`; cycles rejected |
 | `create_list` / `update_list` | New list (optional custom pipeline) / rename + archive |
-| `add_stage` / `rename_stage` / `reorder_stages` | Edit one list's pipeline (fork-on-write) |
+| `list_workflows` / `set_workflow` | Org workflows (stage sets); switch the project or a list (automatic mapping only) |
+| `add_stage` / `rename_stage` / `reorder_stages` / `remove_stage` | Edit an ORG workflow's stages — every project on it changes (`full`) |
+| `list_automations` / `get_automation_runs` | Automation rules (health, run counts) and their run log — org owners/admins only |
+| `create_automation` / `update_automation` / `delete_automation` | When + 0–6 "only if" filters + 1–8 actions; names accepted for stages/tags/lists (triggers and filters take "any of" lists), emails for members (`delete` is `full`) |
+| `list_automation_templates` / `apply_automation_template` | Starter + saved rules; apply with `fills` by name, else it's added paused |
 | `create_doc` / `update_doc` | Doc Hub write; update = full-body replace, new version |
 | `list_folders` / `list_docs` / `search_docs` / `get_doc` | Doc Hub read |
 | `create_folder` | New Doc Hub folder in the pinned project; `parentId` nests (org scope stays app-managed) |
