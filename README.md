@@ -103,7 +103,8 @@ Opt in per machine and per project; nothing is sent until you do.
 
 What leaves the machine, per event: the tool name and a one-line summary;
 for file tools the path and the added/removed line counts; for Bash the
-command (bearer tokens, secrets and URL credentials redacted, cut to 300
+agent's one-line description of the call plus the command (bearer tokens,
+secrets and URL credentials redacted, cut to 300
 characters) and a one-line result such as `32 passed`; for tracker calls the
 task keys and stage named; your prompts and the agent's end-of-turn replies,
 capped at 4096 characters (or only their task keys with

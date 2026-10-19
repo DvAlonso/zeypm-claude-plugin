@@ -13,7 +13,8 @@
  * What leaves the machine (and what never does):
  *  - file tools: the path (relative to the project) and added/removed line
  *    counts from git — never the content, never the old/new strings;
- *  - Bash: the command, redacted (bearer tokens, secrets, URL credentials,
+ *  - Bash: the agent's one-line description (else the command), and the
+ *    command itself, redacted (bearer tokens, secrets, URL credentials,
  *    known key shapes) and cut to 300 characters; the result as one line;
  *  - tracker tools (the project's zeypm MCP server): the task keys and the
  *    stage named in the input, plus keys found in the response (a created
@@ -158,7 +159,14 @@ function describeTool(tool, input, cwd) {
     case 'Read': return { summary: `Read ${relPath(i.file_path, cwd) ?? ''}`.trim(), path: relPath(i.file_path, cwd) }
     case 'Edit': case 'Write': case 'MultiEdit': case 'NotebookEdit':
       return { summary: `${tool} ${relPath(i.file_path ?? i.notebook_path, cwd) ?? ''}`.trim(), path: relPath(i.file_path ?? i.notebook_path, cwd), file: true }
-    case 'Bash': { const command = redactCommand(i.command); return { summary: cap(`Bash ${command}`, CAPS.summary), command } }
+    case 'Bash': {
+      // Claude Code sends a one-line description with every Bash call; that is
+      // what a person wants to read on the canvas. The command (redacted) stays
+      // in the payload for the log.
+      const command = redactCommand(i.command)
+      const description = redactCommand(str(i.description) ?? '')
+      return { summary: cap(description || `Bash ${command}`, CAPS.summary), command }
+    }
     case 'Grep': return { summary: cap(`Grep ${str(i.pattern) ?? ''}`, CAPS.summary) }
     case 'Glob': return { summary: cap(`Glob ${str(i.pattern) ?? ''}`, CAPS.summary) }
     case 'WebFetch': return { summary: cap(`WebFetch ${str(i.url) ?? ''}`, CAPS.summary) }
